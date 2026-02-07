@@ -1,43 +1,43 @@
 ---
 
-devture_systemd_service_manager_enabled: true
+systemd_service_manager_enabled: true
 
-# devture_systemd_service_manager_services_list_auto contains a list of systemd services and their priorities.
+# systemd_auto_list contains a list of systemd services and their priorities.
 # This list is managed by the playbook. You're not meant to override this variable.
-# To add your own items to the list, use `devture_systemd_service_manager_services_list_additional`
-devture_systemd_service_manager_services_list_auto: []
+# To add your own items to the list, use `systemd_additional_services`
+systemd_auto_list: []
 
-# devture_systemd_service_manager_services_list_additional contains your own list of systemd services and their priorities.
+# systemd_additional_services contains your own list of systemd services and their priorities.
 #
 # Example:
-# devture_systemd_service_manager_services_list_additional:
+# systemd_additional_services:
 #   - name: some-service.service
 #     priority: 1250
 #     groups: ['core', 'special']
 #   - name: another-service.service
 #     priority: 3500
 #     groups: ['addon', 'reverse-proxy']
-devture_systemd_service_manager_services_list_additional: []
+systemd_additional_services: []
 
-# devture_systemd_service_manager_services_list contains a list of systemd services and their priorities.
-devture_systemd_service_manager_services_list: "{{ devture_systemd_service_manager_services_list_auto + devture_systemd_service_manager_services_list_additional }}"
+# systemd_services_list contains a list of systemd services and their priorities.
+systemd_services_list: "{{ systemd_auto_list + systemd_additional_services }}"
 
-# devture_systemd_service_manager_service_restart_mode specifies how services are restarted.
+# systemd_restart_mode specifies how services are restarted.
 #
 # Supported values:
 # - `clean-stop-start` - services are stopped cleanly (higher priority level stopped earlier) and then started (lower priority level started earlier)
 # - `one-by-one` - services are restarted one by one (lower priority level earlier)
 #
 # The `one-by-one` mode may decrease downtime, but is potentially less reliable and "clean".
-devture_systemd_service_manager_service_restart_mode: clean-stop-start
+systemd_restart_mode: clean-stop-start
 
-# devture_systemd_service_manager_services_autostart_enabled controls whether systemd services should auto-start when the system reboots
-devture_systemd_service_manager_services_autostart_enabled: true
+# systemd_service_autostart_enabled controls whether systemd services should auto-start when the system reboots
+systemd_service_autostart_enabled: true
 
-# devture_systemd_service_manager_up_verification_enabled controls whether this role will verify if the services did manage to start successfully
-devture_systemd_service_manager_up_verification_enabled: true
+# systemd_verify_up_enabled controls whether this role will verify if the services did manage to start successfully
+systemd_verify_up_enabled: true
 
-# devture_systemd_service_manager_up_verification_delay_seconds specifies how long to wait between starting systemd services and checking if they're started.
+# systemd_verify_delay specifies how long to wait between starting systemd services and checking if they're started.
 #
 # A too low value may lead to a failure, as services may not have enough time to start and potentially fail.
 #
@@ -52,4 +52,5 @@ devture_systemd_service_manager_up_verification_enabled: true
 # put us right at the "dangerous" 30-second mark.
 #
 # We can try to measure this gap and adjust our waiting time accordingly, but we currently don't.
-devture_systemd_service_manager_up_verification_delay_seconds: 15
+systemd_verify_delay: 15
+

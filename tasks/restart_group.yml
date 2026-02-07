@@ -7,4 +7,4 @@
 
 - include_tasks: "{{ role_path }}/tasks/restart_specified.yml"
   vars:
-    devture_systemd_service_manager_services_list_to_work_with: "{{ devture_systemd_service_manager_services_list | selectattr('groups', 'contains', group) }}"
+    systemd_services_list_to_work_with: "{{ systemd_services_list | selectattr('groups', 'contains', group) }}"

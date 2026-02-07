@@ -5,11 +5,11 @@ This is an [Ansible](https://www.ansible.com/) role which manages systemd servic
 
 ## Features
 
-- **starting** (restarting) services, in order, according to their `priority`. Services can all be stopped cleanly and then started anew, or they can be restarted one-by-one (see `devture_systemd_service_manager_service_restart_mode`)
+- **starting** (restarting) services, in order, according to their `priority`. Services can all be stopped cleanly and then started anew, or they can be restarted one-by-one (see `systemd_restart_mode`)
 
-- making services **auto-start** (see `devture_systemd_service_manager_services_autostart_enabled`)
+- making services **auto-start** (see `systemd_service_autostart_enabled`)
 
-- **verifying** services managed to start (see `devture_systemd_service_manager_up_verification_enabled`)
+- **verifying** services managed to start (see `systemd_verify_up_enabled`)
 
 - **stopping** services, in order, according to their `priority`
 
@@ -25,15 +25,15 @@ Example playbook:
 ```yaml
 - hosts: servers
   roles:
-    - when: devture_systemd_service_manager_enabled | bool
+    - when: systemd_service_manager_enabled | bool
       role: galaxy/com.devture.ansible.role.systemd_service_manager
 ```
 
 Example playbook configuration (`group_vars/servers` or other):
 
 ```yaml
-# See `devture_systemd_service_manager_services_list_auto` and `devture_systemd_service_manager_services_list_additional`
-devture_systemd_service_manager_services_list_auto: |
+# See `systemd_auto_list` and `systemd_additional_services`
+systemd_auto_list: |
   {{
     ([{'name': 'some-service.service', 'priority': 1000}])
     +
@@ -43,7 +43,7 @@ devture_systemd_service_manager_services_list_auto: |
 
 Example playbook invocations tags (e.g. `ansible-playbook -i inventory/hosts setup.yml --tags=XXXXX`):
 
-- `restart`, `restart-all`, `start-all` - restarts all services and potentially makes them auto-start (depending on `devture_systemd_service_manager_services_autostart_enabled`)
+- `restart`, `restart-all`, `start-all` - restarts all services and potentially makes them auto-start (depending on `systemd_service_autostart_enabled`)
 
 - `restart-group`, `start-group` - restarts services belonging to the specified group (e.g. `--extra-vars="group=core"`)
 
