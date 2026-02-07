@@ -2,4 +2,4 @@
 
 - include_tasks: "{{ role_path }}/tasks/stop_specified.yml"
   vars:
-    systemd_services_list: "{{ systemd_services_list }}"
+    systemd_services_list_on: "{{ systemd_services_list }}"
