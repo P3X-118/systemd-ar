@@ -8,4 +8,4 @@
   ansible.builtin.service:
     name: "{{ item.name }}"
     state: stopped
-  with_items: "{{ systemd_services_list_to_work_with | sort (attribute='priority,name', reverse=true) }}"
+  with_items: "{{ systemd_services_list | sort (attribute='priority,name', reverse=true) }}"

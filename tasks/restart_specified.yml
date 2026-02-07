@@ -1,6 +1,6 @@
 ---
 
-- when: systemd_services_list_to_work_with | length > 0
+- when: systemd_services_list | length > 0
   name: Ensure systemd is reloaded
   ansible.builtin.service:
     daemon_reload: true
@@ -11,23 +11,23 @@
     # A restart is less disruptive, because services that have this one as a dependency
     # will also stop and start again. If we stop this service cleanly and then start it,
     # services that have this one as a dependency will stop and remain stopped.
-    - when: systemd_services_list_to_work_with | length == 1
+    - when: systemd_services_list | length == 1
       block:
         - name: Ensure single systemd service is restarted
           ansible.builtin.service:
             name: "{{ item.name }}"
             state: restarted
             enabled: "{{ systemd_service_autostart_enabled }}"
-          with_items: "{{ systemd_services_list_to_work_with | sort (attribute='priority,name', reverse=true) }}"
+          with_items: "{{ systemd_services_list | sort (attribute='priority,name', reverse=true) }}"
           when: not ansible_check_mode
 
-    - when: systemd_services_list_to_work_with | length > 1
+    - when: systemd_services_list | length > 1
       block:
         - name: Ensure systemd services are stopped
           ansible.builtin.service:
             name: "{{ item.name }}"
             state: stopped
-          with_items: "{{ systemd_services_list_to_work_with | sort (attribute='priority,name', reverse=true) }}"
+          with_items: "{{ systemd_services_list | sort (attribute='priority,name', reverse=true) }}"
           when: not ansible_check_mode
 
         - name: Ensure systemd services are started
@@ -35,7 +35,7 @@
             name: "{{ item.name }}"
             state: started
             enabled: "{{ systemd_service_autostart_enabled }}"
-          with_items: "{{ systemd_services_list_to_work_with | sort (attribute='priority,name') }}"
+          with_items: "{{ systemd_services_list | sort (attribute='priority,name') }}"
           when: not ansible_check_mode
 
 - when: systemd_restart_mode == 'one-by-one'
@@ -45,10 +45,10 @@
         name: "{{ item.name }}"
         state: restarted
         enabled: "{{ systemd_service_autostart_enabled }}"
-      with_items: "{{ systemd_services_list_to_work_with | sort (attribute='priority,name') }}"
+      with_items: "{{ systemd_services_list | sort (attribute='priority,name') }}"
       when: not ansible_check_mode
 
-- when: systemd_verify_up_enabled | bool and systemd_services_list_to_work_with | length > 0
+- when: systemd_verify_up_enabled | bool and systemd_services_list | length > 0
   name: Verify that systemd services started successfully
   block:
     # If we check service state immediately, we may succeed,
@@ -74,6 +74,6 @@
           If you're on a slow or overloaded server, it may be that services take a longer time to start and that this error is a false-positive.
           You can consider raising the value of the `systemd_verify_delay` variable.
           See `{{ role_path }}/defaults/main.yml` for more details about that.
-      with_items: "{{ systemd_services_list_to_work_with | sort (attribute='priority,name') | map(attribute='name') }}"
+      with_items: "{{ systemd_services_list | sort (attribute='priority,name') | map(attribute='name') }}"
       when:
         - "item.endswith('.service') and (ansible_facts.services[item] | default(none) is none or ansible_facts.services[item].state != 'running')"
