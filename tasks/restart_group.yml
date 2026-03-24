@@ -1,10 +1,10 @@
 ---
 
-- name: Fail if start-group command called incorrectly
-  ansible.builtin.fail:
-    msg: "The `group` variable needs to be provided to this playbook tag, via --extra-vars"
-  when: "group is not defined"
+- when: group is not defined
+  ansible.builtin.debug:
+    msg: "Skipping group restart (no group specified — full restart handled by restart_all)"
 
-- include_tasks: "{{ role_path }}/tasks/restart_specified.yml"
+- when: group is defined
+  include_tasks: "{{ role_path }}/tasks/restart_specified.yml"
   vars:
     systemd_services_list_on: "{{ systemd_services_list | selectattr('groups', 'contains', group) }}"
