@@ -3,6 +3,8 @@
 - block:
     - ansible.builtin.include_tasks: "{{ role_path }}/tasks/validate_config.yml"
   tags:
+    - install-all
+    - setup-all
     - start
     - start-all
     - start-group
@@ -16,6 +18,8 @@
 - block:
     - ansible.builtin.include_tasks: "{{ role_path }}/tasks/restart_all.yml"
   tags:
+    - install-all
+    - setup-all
     - start
     - start-all
     - restart
